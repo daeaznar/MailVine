@@ -1,0 +1,2 @@
+# MailVine
+Email marketing platform
