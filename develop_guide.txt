@@ -1,0 +1,2 @@
+>> set FLASK_APP=filename.py    //Run file wit "flask run" (set for windows, export for mac/linux)
+>> set FLASK_DEBUG=1  //Set debug mode on
