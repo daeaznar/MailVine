@@ -1,82 +1,40 @@
-<!doctype html>
-<html lang="en">
+{% extends "base.html" %}
 
-<head>
-  <!-- Required meta tags -->
-  <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>Log In</title>
+{% block head %}
+<title>Register | MailVine</title>
 
-  <!-- Bootstrap core CSS -->
-  <link rel="stylesheet" href="../Content/css/bootstrap.min.css">
-  <link rel="stylesheet" href="../Content/css/login.css">
-</head>
+<link href="{{ url_for('static', filename='css/login.css') }}" rel="stylesheet">
+{% endblock head%}
 
-<body class="text-center">
-  <header>
-    <nav class="navbar navbar-expand-md navbar-dark bg-dark fixed-top">
-      <div class="container">
-        <a class="navbar-brand" href="index.html">
-          <img src="../Content/img/CLogo.png" alt="" width="40" height="40">
-        </a>
-        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarsExampleDefault"
-          aria-controls="navbarsExampleDefault" aria-expanded="false" aria-label="Toggle navigation">
-          <span class="navbar-toggler-icon"></span>
-        </button>
 
-        <div class="collapse navbar-collapse" id="navbarsExampleDefault">
-          <div class="col-4"></div>
-          <ul class="navbar-nav me-auto mb-2 mb-md-0 fs-5 text">
-            <li class="nav-item active">
-              <a class="nav-link" aria-current="page" href="index.html">Home</a>
-            </li>
+{% block body %}
 
-            <li class="nav-item">
-              <a class="nav-link disabled" href="#" tabindex="-1" aria-disabled="true">Pricing</a>
-            </li>
+<main class="form-signin pt-5" style="text-align:center">
+    <form method="POST" action="">
+        <img class="mb-4" src="{{ url_for('static', filename='img/MV_logo3.png') }}" alt="" width="72" height="72">
+        <h1 class="h1 mb-3 fw-normal">Sign Up</h1>
+        <h5 class="h4 mb-3 fw-normal">Enter Account Info</h5>
 
-            <li class="nav-item">
-              <a class="nav-link disabled" href="#" tabindex="-1" aria-disabled="true">Contact</a>
-            </li>
-
-          </ul>
-          <a class="btn btn-outline-success" href="../Views/login.html" role="button">Log in</a>
+        <input type="text" id="FirstName" name="FirstName" class="form-control" placeholder="First name" aria-label="First name"  required autofocus>
+        <input type="text" id="LastName" name="LastName" class="form-control" placeholder="Last name" aria-label="Last name" required autofocus>
+        <label for="Email" class="visually-hidden">Email address</label>
+        <input type="email" id="Email" name="Email" class="form-control" placeholder="Email address" required autofocus>
+        <div>&nbsp;</div>
+        <label for="Password" class="visually-hidden">Password</label>
+        <input type="password" id="Password" name="Password" class="form-control" placeholder="Password"  required autofocus>
+        <label for="ConfirmPassword" class="visually-hidden">Confirm Password</label>
+        <input type="password" id="ConfirmPassword" class="form-control" placeholder="Confirm Password" required autofocus>
+        <div class="form-check pb-1">
+            <input class="form-check-input" type="checkbox" value="" id="Check" required autofocus>
+            <label class="form-check-label" for="Check">
+                I've read & accepted the <a class="btn btn-link" href="privacy_policy.html" role="button">Privacy
+                Policy</a>
+            </label>
         </div>
-      </div>
-    </nav>
-  </header>
-</body>
+        <button class="w-100 btn btn-lg btn-outline-primary" type="submit">Sign Up</button>
 
-<main class="form-signin pt-1">
-  <div class="pb-5 text-center">
-    <h1>Sign Up</h1>
-</div>
-
-  <form>
-
-    <h4 class="h4 mb-3 fw-normal">Enter Account Info</h4>
-
-    <input type="text" class="form-control" placeholder="First name" aria-label="First name">
-    <input type="text" class="form-control" placeholder="Last name" aria-label="Last name">
-    <label for="inputEmail" class="visually-hidden">Email address</label>
-    <input type="email" id="inputEmail" class="form-control" placeholder="Email address" required autofocus>
-    <div>&nbsp;</div>
-    <label for="inputPassword" class="visually-hidden">Password</label>
-    <input type="password" id="inputPassword" class="form-control" placeholder="Password" required>
-    <label for="inputPassword" class="visually-hidden">Password</label>
-    <input type="password" id="inputPassword" class="form-control" placeholder="Confirm Password" required>
-    <div class="form-check pb-5">
-      <input class="form-check-input" type="checkbox" value="" id="flexCheckDefault" required>
-      <label class="form-check-label" for="flexCheckDefault">
-        I've read & accepted the <a class="btn btn-link" href="privacy_policy.html" role="button">Privacy Policy</a>
-      </label>
-    </div>
-    <button class="w-100 btn btn-lg btn-outline-primary" type="submit">Sign Up</button>
-
-  </form>
+    </form>
 
 </main>
 
-</body>
-
-</html>
+{% endblock body %}
