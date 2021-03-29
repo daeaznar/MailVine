@@ -1,4 +1,4 @@
-from flask import Flask, render_template, request, redirect, url_for
+from flask import Flask, render_template, flash, redirect, url_for
 from forms import RegistrationForm, LoginForm
 
 # from flask_mysqldb import MySQL
@@ -16,16 +16,19 @@ def index():
 
 
 # Login
-@app.route('/login.html')
+@app.route('/login.html', methods=['GET', 'POST'])
 def login():
     form = LoginForm()
     return render_template('login.html', form=form)
 
 
 # User Registration/Sign up
-@app.route('/register.html')
+@app.route('/register.html', methods=['GET', 'POST'])
 def register():
     form = RegistrationForm()
+    if form.validate_on_submit():
+        flash(f"Account created successfully. Congrats {form.firstName.data}!", 'success')
+        return redirect(url_for('index'))
     return render_template('register.html', form=form)
 
 

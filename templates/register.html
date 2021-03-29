@@ -10,7 +10,15 @@
 {% block body %}
 
 <main class="form-signin pt-5" style="text-align:center">
-    <form method="POST" action="">
+    <form action="" method="POST">
+        {{ form.hidden_tag() }} <!-- generates a hidden field that includes a token that is used to protect the form against CSRF attacks-->
+        <fieldset class="form-group">
+            <legend class="border bottom mb-4">Create your MailVine Account</legend>
+            {{ form. }}
+        </fieldset>
+    </form>
+
+    <!--<form method="POST" action="">
         <img class="mb-4" src="{{ url_for('static', filename='img/MV_logo3.png') }}" alt="" width="72" height="72">
         <h1 class="h1 mb-3 fw-normal">Sign Up</h1>
         <h5 class="h4 mb-3 fw-normal">Enter Account Info</h5>
@@ -33,7 +41,7 @@
         </div>
         <button class="w-100 btn btn-lg btn-outline-primary" type="submit">Sign Up</button>
 
-    </form>
+    </form>-->
 
 </main>
 
