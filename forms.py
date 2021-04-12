@@ -5,12 +5,11 @@ from wtforms.validators import DataRequired, Email, EqualTo
 
 # Registration form
 class RegistrationForm(FlaskForm):
-    firstName = StringField('FirstName', validators=[DataRequired()])
-    lastName = StringField('LastName', validators=[DataRequired()])
+    firstName = StringField('First Name', validators=[DataRequired()])
+    lastName = StringField('Last Name', validators=[DataRequired()])
     email = StringField('Email', validators=[DataRequired(), Email()])
     password = PasswordField('Password', validators=[DataRequired()])
-    confirm_password = PasswordField('ConfirmPassword', validators=[DataRequired(), EqualTo('password')])
-    privacy_policy = BooleanField("I've read and accepted the ")
+    confirmPassword = PasswordField('Confirm Password', validators=[DataRequired(), EqualTo('password')])
     submit = SubmitField('Sign Up')
 
 
