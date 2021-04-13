@@ -1,5 +1,6 @@
 from flask import Flask, render_template, flash, redirect, url_for
 from flask_sqlalchemy import SQLAlchemy
+from datetime import datetime
 from forms import RegistrationForm, LoginForm
 
 # from flask_mysqldb import MySQL
@@ -8,6 +9,9 @@ app = Flask(__name__)
 
 # Secret Key to protect data. Protection against cookie data tampering.
 app.config['SECRET_KEY'] = '2a44893ff4337692349481e9a9e77e75'
+
+# region DataBase structure
+
 app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///mailvine.db'
 
 db = SQLAlchemy(app)
@@ -17,12 +21,17 @@ class User(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     firstName = db.Column(db.String(255), nullable=False)
     lastName = db.Column(db.String(255), nullable=False)
-    email = db.Column(db.String(120), nullable=False)
+    email = db.Column(db.String(120), unique=True, nullable=False)
     img_file = db.Column(db.String(20), nullable=False, default='default.jpg')
     password = db.Column(db.String(60), nullable=False)
+    is_active = db.Column(db.Boolean, nullable=False)
+    created_at = db.Column(db.DateTime, nullable=False, default=datetime.utcnow)
+    updated_at = db.Column(db.DateTime, nullable=False, default=datetime.utcnow)
 
     def __repr__(self):
-        return f"User('{self.firstName}', '{self.email}', '{self.img_file}')"
+        return f"User('{self.firstName} {self.lastName}', '{self.email}', '{self.img_file}')"
+
+# endregion
 
 
 # Index

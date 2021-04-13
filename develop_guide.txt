@@ -1,2 +1,3 @@
->> set FLASK_APP=filename.py    //Run file wit "flask run" (set for windows, export for mac/linux)
->> set FLASK_DEBUG=1  //Set debug mode on
+>> set FLASK_APP=filename.py    // Run file wit "flask run" (set for windows, export for mac/linux)
+>> set FLASK_ENV=development    // Sets environment to development mode, debug mode on.
+>> set FLASK_DEBUG=1/0  // Set debug mode on/off
