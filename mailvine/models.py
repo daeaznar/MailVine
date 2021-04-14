@@ -1,20 +1,5 @@
-from flask import Flask, render_template, flash, redirect, url_for
-from flask_sqlalchemy import SQLAlchemy
 from datetime import datetime
-from forms import RegistrationForm, LoginForm
-
-# from flask_mysqldb import MySQL
-
-app = Flask(__name__)
-
-# Secret Key to protect data. Protection against cookie data tampering.
-app.config['SECRET_KEY'] = '2a44893ff4337692349481e9a9e77e75'
-
-# region DataBase structure
-
-app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///mailvine.db'
-
-db = SQLAlchemy(app)
+from mailvine import db
 
 
 class User(db.Model):
@@ -36,6 +21,13 @@ class User(db.Model):
         return f"User('{self.first_name} {self.last_name}', '{self.email}', '{self.img_file}')"
 
 
+# Many to many relationship List-Contact
+contacts = db.Table('contacts',
+                    db.Column('list_id', db.Integer, db.ForeignKey('list.id'), primary_key=True),
+                    db.Column('contact_id', db.Integer, db.ForeignKey('contact.id'), primary_key=True)
+                    )
+
+
 class List(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     name = db.Column(db.String(60), nullable=False)
@@ -53,11 +45,11 @@ class List(db.Model):
         return f"List('{self.name}', '{self.description}')"
 
 
-# Many to many relationship List-Contact
-contacts = db.Table('contacts',
-                    db.Column('list_id', db.Integer, db.ForeignKey('list.id'), primary_key=True),
-                    db.Column('contact_id', db.Integer, db.ForeignKey('contact.id'), primary_key=True)
-                    )
+# Many to many relationship Contact-Mail
+mails = db.Table('mails',
+                 db.Column('contact_id', db.Integer, db.ForeignKey('contact.id'), primary_key=True),
+                 db.Column('mail_id', db.Integer, db.ForeignKey('mail.id'), primary_key=True)
+                 )
 
 
 class Contact(db.Model):
@@ -70,22 +62,17 @@ class Contact(db.Model):
     updated_at = db.Column(db.DateTime, nullable=False, default=datetime.utcnow, onupdate=datetime.utcnow)
     # Many to many relationship List-Contact exists
     # Many to many relationship Contact-Mail
-    mails = db.relationship('Mail', secondary=mails, lazy='subquery',
-                            backref=db.backref('contacts', lazy=True))
+    mails = db.relationship('Mail', secondary=mails, lazy='subquery',   # Relationship with Mail class, secondary with mails table
+                            backref=db.backref('recipients', lazy=True))
 
     def __repr__(self):
         return f"Contact('{self.name}', '{self.email}')"
 
 
-# Many to many relationship Contact-Mail
-mails = db.Table('mails',
-                 db.Column('contact_id', db.Integer, db.ForeignKey('contact.id'), primary_key=True),
-                 db.Column('mail_id', db.Integer, db.ForeignKey('mail.id'), primary_key=True)
-                 )
-
 
 class Mail(db.Model):
     id = db.Column(db.Integer, primary_key=True)
+    subject = db.Column(db.String(120), nullable=False, default='Check this out!')
     email_text = db.Column(db.Text, nullable=False)
     email_photo = db.Column(db.String(20))
     is_active = db.Column(db.Boolean, nullable=False, default=1)
@@ -95,39 +82,4 @@ class Mail(db.Model):
     # Many to many relationship Contact-Mail exists
 
     def __repr__(self):
-        return f"Contact('{self.name}', '{self.email}')"
-
-# endregion
-
-
-# Index
-@app.route('/')
-def index():
-    return render_template('index.html')
-
-
-# Login
-@app.route('/login.html', methods=['GET', 'POST'])
-def login():
-    form = LoginForm()
-    if form.validate_on_submit():
-        if form.email.data == 'admin@mailvine.com' and form.password.data == 'pass':
-            flash(f"You're logged in. Welcome!", 'success')
-            return redirect(url_for('index'))
-        else:
-            flash("Login unsuccessful", 'danger')
-    return render_template('login.html', form=form)
-
-
-# User Registration/Sign up
-@app.route('/register.html', methods=['GET', 'POST'])
-def register():
-    form = RegistrationForm()
-    if form.validate_on_submit():
-        flash(f"Account created successfully. Welcome to MailVine {form.firstName.data}!", 'success')
-        return redirect(url_for('index'))
-    return render_template('register.html', form=form)
-
-
-if __name__ == '__main__':
-    app.run(debug=True)
+        return f"Mail('{self.subject}', '{self.sent_at}')"
