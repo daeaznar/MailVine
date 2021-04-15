@@ -7,8 +7,11 @@
 
     <!-- Bootstrap core CSS -->
     <link rel="stylesheet" href="{{ url_for('static', filename='css/bootstrap.min.css') }}">
-    {% block head %}
+    <!-- My CSS -->
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/main.css') }}">
 
+    {% block head %}
+    <!-- HEAD HERE -->
     {% endblock head%}
 
     <link rel="shortcut icon" href="{{ url_for('static', filename='img/MV_logo3.png') }}">
@@ -33,47 +36,44 @@
                 <div class="col-4"></div>
                 <ul class="navbar-nav me-auto mb-2 mb-md-0 fs-5 text">
                     <li class="nav-item active">
-                        <a class="nav-link" aria-current="page" href="{{ url_for('index') }}">Home</a>
+                        <a class="nav-link" aria-current="page" href="{{ url_for('dashboard') }}">Dashboard</a>
                     </li>
 
-                    <li class="nav-item">
-                        <a class="nav-link disabled" href="#" tabindex="-1" aria-disabled="true">Pricing</a>
+                    <li class="nav-item active">
+                        <a class="nav-link" aria-current="page" href="send_mail.html">Send Mail</a>
                     </li>
 
-                    <li class="nav-item">
-                        <a class="nav-link disabled" href="#" tabindex="-1" aria-disabled="true">Contact</a>
+                    <li class="nav-item active">
+                        <a class="nav-link" aria-current="page" href="manage_lists.html">Manage Lists</a>
                     </li>
 
                 </ul>
-                {% if current_user.is_authenticated %}
-                <a class="btn btn-outline-success" href="{{ url_for('dashboard') }}" role="button">Dashboard</a>
-                {% else %}
-                <a class="btn btn-outline-success" href="{{ url_for('login') }}" role="button">Log in</a>
-                {% endif %}
+
+                <div>
+                    {% if current_user.is_authenticated %}
+                        <a class="btn btn-outline-primary" href="{{ url_for('account') }}" role="button">Account</a>
+                        <a class="btn btn-outline-danger" href="{{ url_for('logout') }}" role="button">Log Out</a>
+                    {% endif %}
+                </div>
+
             </div>
         </div>
     </nav>
 </header>
 
-
-<!-- Sends message of success or error and shows it accordingly -->
-<div class="container">
-    {% with messages = get_flashed_messages(with_categories=true) %}
-        {% if messages %}
-            {% for category, message in messages %}
-                <div class="alert alert-{{ category }}">
-                    {{ message }}
-                </div>
-            {% endfor %}
-        {% endif %}
-    {% endwith %}
-</div>
-
+{% with messages = get_flashed_messages(with_categories=true) %}
+    {% if messages %}
+        {% for category, message in messages %}
+            <div class="alert alert-{{ category }}">
+                {{ message }}
+            </div>
+        {% endfor %}
+    {% endif %}
+{% endwith %}
 
 {% block body %}
 <!-- BODY HERE -->
 {% endblock body%}
-
 
 <script src="{{ url_for('static', filename='js/bootstrap.bundle.min.js') }}"></script>
 

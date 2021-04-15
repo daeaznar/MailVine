@@ -1,0 +1,109 @@
+{% extends "dashboard_layout.html" %}
+
+{% block head %}
+
+<title>Dashboard | MailVine</title>
+
+{% endblock head %}
+
+
+{% block body %}
+
+<main class="container">
+    <div class="content-section">
+        <div class="media">
+            <img class="rounded-circle account-img" src="{{ img_file }}">
+            <div class="media-body">
+                <h2 class="account-heading">{{ current_user.first_name }} {{ current_user.last_name }}</h2>
+                <p class="text-secondary">{{ current_user.email }}</p>
+            </div>
+        </div>
+
+        <form action="" method="POST" enctype="multipart/form-data"> <!-- enctype is a form to pass image data properly-->
+            {{ form.hidden_tag() }}
+            <!-- generates a hidden field that includes a token that is used to protect the form against CSRF attacks-->
+            <fieldset class="form-group">
+                <legend class="border-bottom mb-4">Account Info</legend>
+                <div class="form-group">
+                    {{ form.firstName.label(class="form-control-label") }}
+                    {% if form.firstName.errors %}
+                    {{ form.firstName(class="form-control form-control-lg is-invalid") }}
+                    <div class="invalid-feedback">
+                        {% for error in form.firstName.errors %}
+                        <span>{{ error }}</span>
+                        {% endfor %}
+                    </div>
+                    {% else %}
+                    {{ form.firstName(class="form-control form-control-lg") }}
+                    {% endif %}
+                </div>
+                <div class="form-group">
+                    {{ form.lastName.label(class="form-control-label") }}
+                    {% if form.lastName.errors %}
+                    {{ form.lastName(class="form-control form-control-lg is-invalid") }}
+                    <div class="invalid-feedback">
+                        {% for error in form.lastName.errors %}
+                        <span>{{ error }}</span>
+                        {% endfor %}
+                    </div>
+                    {% else %}
+                    {{ form.lastName(class="form-control form-control-lg") }}
+                    {% endif %}
+                </div>
+                <div class="form-group">
+                    {{ form.email.label(class="form-control-label") }}
+                    {% if form.email.errors %}
+                    {{ form.email(class="form-control form-control-lg is-invalid") }}
+                    <div class="invalid-feedback">
+                        {% for error in form.email.errors %}
+                        <span>{{ error }}</span>
+                        {% endfor %}
+                    </div>
+                    {% else %}
+                    {{ form.email(class="form-control form-control-lg") }}
+                    {% endif %}
+                </div>
+                <div class="form-group"><br>
+                    {{ form.picture.label() }}<br>
+                    {{ form.picture(class="form-control-file") }}
+                    {% if form.picture.errors %}
+                        {% for error in form.picture.errors %}<br>
+                    <span class="text-danger">{{ error }}</span>
+                        {% endfor %}
+                    {% endif %}
+                </div>
+            </fieldset>
+            <div class="form-group pt-3">
+                {{ form.submit(class="btn btn-outline-primary") }}
+            </div>
+        </form>
+
+        <!--<form method="POST" action="">
+            <img class="mb-4" src="{{ url_for('static', filename='img/MV_logo3.png') }}" alt="" width="72" height="72">
+            <h1 class="h1 mb-3 fw-normal">Sign Up</h1>
+            <h5 class="h4 mb-3 fw-normal">Enter Account Info</h5>
+
+            <input type="text" id="FirstName" name="FirstName" class="form-control" placeholder="First name" aria-label="First name"  required autofocus>
+            <input type="text" id="LastName" name="LastName" class="form-control" placeholder="Last name" aria-label="Last name" required autofocus>
+            <label for="Email" class="visually-hidden">Email address</label>
+            <input type="email" id="Email" name="Email" class="form-control" placeholder="Email address" required autofocus>
+            <div>&nbsp;</div>
+            <label for="Password" class="visually-hidden">Password</label>
+            <input type="password" id="Password" name="Password" class="form-control" placeholder="Password"  required autofocus>
+            <label for="ConfirmPassword" class="visually-hidden">Confirm Password</label>
+            <input type="password" id="ConfirmPassword" class="form-control" placeholder="Confirm Password" required autofocus>
+            <div class="form-check pb-1">
+                <input class="form-check-input" type="checkbox" value="" id="Check" required autofocus>
+                <label class="form-check-label" for="Check">
+                    I've read & accepted the <a class="btn btn-link" href="privacy_policy.html" role="button">Privacy
+                    Policy</a>
+                </label>
+            </div>
+            <button class="w-100 btn btn-lg btn-outline-primary" type="submit">Sign Up</button>
+
+        </form>-->
+
+    </div>
+</main>
+
+{%endblock body%}

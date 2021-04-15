@@ -1,8 +1,15 @@
 from datetime import datetime
-from mailvine import db
+from mailvine import db, login_manager
+from flask_login import UserMixin
 
 
-class User(db.Model):
+# loads logged iin user
+@login_manager.user_loader
+def load_user(user_id):
+    return User.query.get(int(user_id))
+
+
+class User(db.Model, UserMixin):  # inherit UserMixin class
     id = db.Column(db.Integer, primary_key=True)
     first_name = db.Column(db.String(255), nullable=False)
     last_name = db.Column(db.String(255), nullable=False)
@@ -62,12 +69,12 @@ class Contact(db.Model):
     updated_at = db.Column(db.DateTime, nullable=False, default=datetime.utcnow, onupdate=datetime.utcnow)
     # Many to many relationship List-Contact exists
     # Many to many relationship Contact-Mail
-    mails = db.relationship('Mail', secondary=mails, lazy='subquery',   # Relationship with Mail class, secondary with mails table
+    mails = db.relationship('Mail', secondary=mails, lazy='subquery',
+                            # Relationship with Mail class, secondary with mails table
                             backref=db.backref('recipients', lazy=True))
 
     def __repr__(self):
         return f"Contact('{self.name}', '{self.email}')"
-
 
 
 class Mail(db.Model):
@@ -79,6 +86,7 @@ class Mail(db.Model):
     sent_at = db.Column(db.DateTime, nullable=False, default=datetime.utcnow)
     # Many to one relationship with user
     user_id = db.Column(db.Integer, db.ForeignKey('user.id'), nullable=False)
+
     # Many to many relationship Contact-Mail exists
 
     def __repr__(self):

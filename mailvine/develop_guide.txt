@@ -5,3 +5,10 @@
 >> set FLASK_APP=filename.py    // Run file wit "flask run" (set for windows, export for mac/linux)
 >> set FLASK_ENV=development    // Sets environment to development mode, debug mode on.
 >> set FLASK_DEBUG=1/0  // Set debug mode on/off
+
+==================================================================================================================
+Hashing passwords with flask-bcrypt
+>> bcrypt.generate_password_hash('my_password')   // hash in bites
+>> hashed_pw = bcrypt.generate_password_hash('my_password').decode('utf-8')   // hash as a string
+>> bcrypt.check_password_hash(hashed_pw, 'my_password') // returns True or False if password matches
+
