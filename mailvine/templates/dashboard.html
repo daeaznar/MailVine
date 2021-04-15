@@ -18,6 +18,24 @@
             rerum.</p>
     </div>
 
+    {% for mail in mails %}
+
+        <article class="media content-section">
+            <div class="media-body">
+                <div class="article-metadata">
+                    <small class="text-muted">{{ mail.created_at.strftime('%Y-%m-%d') }}</small>
+                </div>
+                <h3><a href="{{ url_for('mail', mail_id=mail.id) }}" class="article-title">{{ mail.title}}</a></h3>
+                <br>
+                <p class="article-content">{{ mail.subject }}</p>
+                <hr>
+                <p class="article-content">{{ mail.email_text }}</p>
+                
+            </div>
+        </article>
+
+    {% endfor %}
+
 </main>
 
 {%endblock body%}

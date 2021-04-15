@@ -9,13 +9,13 @@
 
 {% block body %}
 
-<main class="form-signin pt-5" style="text-align:center">
+<main class="form-signin pt-5">
 
     <form action="" method="POST">
         {{ form.hidden_tag() }}
         <!-- generates a hidden field that includes a token that is used to protect the form against CSRF attacks-->
         <fieldset class="form-group">
-            <legend class="border-bottom mb-4">Log In</legend>
+            <legend class="border-bottom mb-4" style="text-align: center;">Log In</legend>
 
             <div class="form-group">
                 {{ form.email.label(class="form-control-label") }}
@@ -48,14 +48,17 @@
                 {{ form.remember_me.label(class="form-check-label") }}
             </div>
         </fieldset>
-        <div class="form-group">
-            {{ form.submit(class="btn btn-outline-info") }}
+        <br>
+        <div class="d-grid gap-2 col-6 mx-auto">
+            {{ form.submit(class="btn btn-outline-success") }}
         </div>
-        <small class="text-muted ml-2" >
-            <a href="#">Forgot Password?</a>
+        <br>
+        <small class="text-muted ml-2">
+            <a href="#" >Forgot Password?</a>
         </small>
     </form>
-    <div class="border-top pt-3">
+    <br>
+    <div class="border-top pt-3" style="text-align: center;">
         <small class="text-muted">
             Don't have an Account? <a class="ml-2" href="{{ url_for('register') }}">Register</a>
         </small>

@@ -9,13 +9,13 @@
 
 {% block body %}
 
-<main class="form-signin pt-5" style="text-align:center">
+<main class="form-signin pt-5">
 
 <form action="" method="POST">
         {{ form.hidden_tag() }}
         <!-- generates a hidden field that includes a token that is used to protect the form against CSRF attacks-->
         <fieldset class="form-group">
-            <legend class="border-bottom mb-4">Create your MailVine Account</legend>
+            <legend class="border-bottom mb-4" style="text-align: center;">Create your MailVine Account</legend>
             <div class="form-group">
                 {{ form.firstName.label(class="form-control-label") }}
                 {% if form.firstName.errors %}
@@ -82,11 +82,12 @@
                 {% endif %}
             </div>
         </fieldset>
-        <div class="form-group">
-            {{ form.submit(class="btn btn-outline-info") }}
+        <div class="d-grid gap-2 col-6 mx-auto" style="text-align: center;">
+            {{ form.submit(class="btn btn-outline-primary") }}
         </div>
     </form>
-    <div class="border-top pt-3">
+    <br>
+    <div class="border-top pt-3" style="text-align: center;">
         <small class="text-muted">
             Already have an account? <a class="ml-2" href="{{ url_for('login') }}">Sign In</a>
         </small>

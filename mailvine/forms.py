@@ -1,6 +1,6 @@
 from flask_wtf import FlaskForm
 from flask_wtf.file import FileField, FileAllowed
-from wtforms import StringField, PasswordField, SubmitField, BooleanField
+from wtforms import StringField, PasswordField, SubmitField, BooleanField, TextAreaField
 from wtforms.validators import DataRequired, Email, EqualTo, ValidationError
 from flask_login import current_user
 from mailvine.models import User
@@ -38,7 +38,7 @@ class UpdateAccountForm(FlaskForm):
     firstName = StringField('First Name', validators=[DataRequired()])
     lastName = StringField('Last Name', validators=[DataRequired()])
     email = StringField('Email', validators=[DataRequired(), Email()])
-    picture = FileField('Update Profile Picture', validators=[FileAllowed(['jpg', 'jpeg', 'png'])])
+    picture = FileField('Update Profile Picture', validators=[FileAllowed(['jpg', 'png'])])
     submit = SubmitField('Update')
 
     # validates if email is registered
@@ -47,3 +47,12 @@ class UpdateAccountForm(FlaskForm):
             user = User.query.filter_by(email=email.data).first()  # first coincidence with that email
             if user:
                 raise ValidationError('An account is already registered with that email')
+
+
+
+class MailForm(FlaskForm):
+    title = StringField('Title', validators=[DataRequired()])
+    subject = StringField('Subject', validators=[DataRequired()])
+    email_text = TextAreaField('Content', validators=[DataRequired()])
+    picture = FileField('Attach Image', validators=[FileAllowed(['jpg', 'png'])])
+    submit = SubmitField('Save')

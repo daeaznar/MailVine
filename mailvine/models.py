@@ -55,7 +55,8 @@ class List(db.Model):
 # Many to many relationship Contact-Mail
 mails = db.Table('mails',
                  db.Column('contact_id', db.Integer, db.ForeignKey('contact.id'), primary_key=True),
-                 db.Column('mail_id', db.Integer, db.ForeignKey('mail.id'), primary_key=True)
+                 db.Column('mail_id', db.Integer, db.ForeignKey('mail.id'), primary_key=True),
+                 db.Column('sent_at', db.DateTime, nullable=False, default=datetime.utcnow)
                  )
 
 
@@ -79,15 +80,15 @@ class Contact(db.Model):
 
 class Mail(db.Model):
     id = db.Column(db.Integer, primary_key=True)
+    title = db.Column(db.String(60), nullable=False)
     subject = db.Column(db.String(120), nullable=False, default='Check this out!')
     email_text = db.Column(db.Text, nullable=False)
     email_photo = db.Column(db.String(20))
     is_active = db.Column(db.Boolean, nullable=False, default=1)
-    sent_at = db.Column(db.DateTime, nullable=False, default=datetime.utcnow)
+    created_at = db.Column(db.DateTime, nullable=False, default=datetime.utcnow)
     # Many to one relationship with user
     user_id = db.Column(db.Integer, db.ForeignKey('user.id'), nullable=False)
-
     # Many to many relationship Contact-Mail exists
 
     def __repr__(self):
-        return f"Mail('{self.subject}', '{self.sent_at}')"
+        return f"Mail('{self.Title}', '{self.sent_at}')"
