@@ -1,11 +1,12 @@
-import os   # get file name and file extension
-import secrets  #generate hex code for images
-from PIL import Image   #manage photos, resize, save
+import smtplib
+import os  # get file name and file extension
+import secrets  # generate hex code for images
+from PIL import Image  # manage photos, resize, save
 from flask import render_template, flash, redirect, url_for, request, abort
 from mailvine import app, db, bcrypt
-from mailvine.forms import RegistrationForm, LoginForm, UpdateAccountForm, MailForm
+from mailvine.forms import RegistrationForm, LoginForm, UpdateAccountForm, MailForm, ListForm, SendMailForm
 from mailvine.models import User, List, Contact, Mail
-from sqlalchemy.sql import  select
+from sqlalchemy.sql import select
 from flask_login import login_user, current_user, logout_user, login_required
 
 
@@ -60,14 +61,10 @@ def logout():
 
 # User dashboard when logged in
 @app.route('/dashboard.html')
-#user has to be logged in to access, otherwise redirects to login. If redirected, aget login goes to requested route
-@login_required    
+# user has to be logged in to access, otherwise redirects to login. If redirected, aget login goes to requested route
+@login_required
 def dashboard():
-    #   select from Mail where user_id = current user
-    user = User.query.get(current_user.id)
-    mails = Mail.query.filter(Mail.user==user)
-    return render_template('dashboard.html', mails=mails)
-
+    return render_template('dashboard.html')
 
 
 # function for new profile pictures. Saves img in directory, changes name keeping original extension
@@ -79,7 +76,7 @@ def save_picture(form_picture):
     output_size = (300, 300)
     img = Image.open(form_picture)
     img.thumbnail(output_size)
-    
+
     img.save(picture_path)
     return picture_fn
 
@@ -99,12 +96,24 @@ def account():
         db.session.commit()
         flash("Your account has been updated", 'success')
         return redirect(url_for('account'))
-    elif request.method == 'GET':   # gets values that are already saved
+    elif request.method == 'GET':  # gets values that are already saved
         form.firstName.data = current_user.first_name
         form.lastName.data = current_user.last_name
         form.email.data = current_user.email
     img_file = url_for('static', filename='img/profile_pics/' + current_user.img_file)
     return render_template('account.html', img_file=img_file, form=form)
+
+
+##################################################################################################################
+# MANAGE MAILS
+@app.route('/manage_mails.html')
+# user has to be logged in to access, otherwise redirects to login. If redirected, aget login goes to requested route
+@login_required
+def manage_mail():
+    #   select from Mail where user_id = current user
+    user = User.query.get(current_user.id)
+    mails = Mail.query.filter(Mail.user == user)
+    return render_template('manage_mails.html', mails=mails)
 
 
 # function for mail attached photos. Saves img in directory, changes name keeping original extension
@@ -116,7 +125,7 @@ def attach_img(form_picture):
     output_size = (300, 300)
     img = Image.open(form_picture)
     img.thumbnail(output_size)
-    
+
     img.save(picture_path)
     return picture_fn
 
@@ -129,13 +138,15 @@ def new_mail():
     if form.validate_on_submit():
         if form.picture.data:
             img = attach_img(form.picture.data)
-            mail = Mail(title=form.title.data, subject=form.subject.data, email_text=form.email_text.data, email_photo=img, user=current_user)
+            mail = Mail(title=form.title.data, subject=form.subject.data, email_text=form.email_text.data,
+                        email_photo=img, user=current_user)
         else:
-            mail = Mail(title=form.title.data, subject=form.subject.data, email_text=form.email_text.data, user=current_user)
+            mail = Mail(title=form.title.data, subject=form.subject.data, email_text=form.email_text.data,
+                        user=current_user)
         db.session.add(mail)
         db.session.commit()
         flash('Mail has been created', 'success')
-        return redirect(url_for('dashboard'))
+        return redirect(url_for('manage_mail'))
     return render_template('create_mail.html', form=form, legend='New Mail')
 
 
@@ -143,7 +154,6 @@ def new_mail():
 def mail(mail_id):
     mail = Mail.query.get_or_404(mail_id)
     return render_template('mail.html', mail=mail)
-
 
 
 @app.route('/mail/<int:mail_id>/update', methods=['GET', 'POST'])
@@ -167,3 +177,107 @@ def update_mail(mail_id):
         form.email_text.data = mail.email_text
         form.picture.data = mail.email_photo
     return render_template('create_mail.html', form=form, legend='Update Mail')
+
+
+@app.route('/mail/<int:mail_id>/delete', methods=['POST'])
+@login_required
+def delete_mail(mail_id):
+    mail = Mail.query.get_or_404(mail_id)
+    if mail.user != current_user:
+        abort(403)
+    db.session.delete(mail)
+    db.session.commit()
+    flash('Mail has been deleted!', 'success')
+    return redirect(url_for('manage_mail'))
+
+
+##################################################################################################################
+# MANAGE LISTS
+@app.route('/manage_lists.html')
+# user has to be logged in to access, otherwise redirects to login. If redirected, aget login goes to requested route
+@login_required
+def manage_list():
+    #   select from Mail where user_id = current user
+    user = User.query.get(current_user.id)
+    lists = List.query.filter(List.user == user)
+    return render_template('manage_lists.html', lists=lists)
+
+
+# Create List
+@app.route('/list/new', methods=['GET', 'POST'])
+@login_required  # user has to be logged in to access accounts
+def new_list():
+    form = ListForm()
+    if form.validate_on_submit():
+        list = List(name=form.name.data, description=form.description.data, user=current_user)
+        db.session.add(list)
+        db.session.commit()
+        flash('List has been created', 'success')
+        return redirect(url_for('manage_list'))
+    return render_template('create_list.html', form=form, legend='New List')
+
+
+@app.route('/list/<int:list_id>')
+def list(list_id):
+    list = List.query.get_or_404(list_id)
+    return render_template('list.html', list=list)
+
+
+@app.route('/list/<int:list_id>/update', methods=['GET', 'POST'])
+@login_required
+def update_list(list_id):
+    list = List.query.get_or_404(list_id)
+    if list.user != current_user:
+        abort(403)
+    form = ListForm()
+    if form.validate_on_submit():
+        list.name = form.name.data
+        list.description = form.description.data
+        db.session.commit()
+        flash('List has been updated!', 'success')
+        return redirect(url_for('list', list_id=list.id))
+    elif request.method == 'GET':
+        form.name.data = list.name
+        form.description.data = list.description
+    return render_template('create_list.html', form=form, legend='Update List')
+
+
+@app.route('/list/<int:list_id>/delete', methods=['POST'])
+@login_required
+def delete_list(list_id):
+    list = List.query.get_or_404(list_id)
+    if list.user != current_user:
+        abort(403)
+    db.session.delete(list)
+    db.session.commit()
+    flash('List has been deleted!', 'success')
+    return redirect(url_for('manage_list'))
+
+
+##################################################################################################################
+# MANAGE CONTACTS
+
+# Send Email
+@app.route('/send_mail', methods=['GET', 'POST'])
+@login_required
+def send_mail():
+    form = SendMailForm()
+    if form.validate_on_submit():
+        email = form.email.data
+        subject = form.subject.data
+        content = form.content.data
+
+        message = f"""\
+        Subject: {subject}
+
+        {content}"""
+
+        server = smtplib.SMTP("smtp.gmail.com", 587)
+        server.starttls()
+        server.login("email@gmail.com", "password here")
+        server.sendmail("dae.aznar@gmail.com", email, content)
+
+        flash('Email has been sent', 'success')
+        return redirect(url_for('dashboard'))
+    return render_template('send_mail.html', form=form)
+

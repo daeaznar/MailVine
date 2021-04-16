@@ -1,0 +1,42 @@
+{% extends "dashboard_layout.html" %}
+
+{% block head %}
+
+<title>Manage Mails| MailVine</title>
+
+{% endblock head %}
+
+
+{% block body %}
+
+<main class="container">
+
+    <div class="pt-5 text-center">
+        <h1>Here are the mails you've created {{ current_user.first_name }}</h1>
+    </div>
+    <br>
+    <div>
+        <a class="btn btn-success" href="{{ url_for('new_mail') }}" role="button">Create New Mail</a>
+    </div>
+    <br>
+    {% for mail in mails %}
+
+    <article class="media content-section">
+        <div class="media-body">
+            <div class="article-metadata">
+                <small class="text-muted">{{ mail.created_at.strftime('%Y-%m-%d') }}</small>
+            </div>
+            <h3><a href="{{ url_for('mail', mail_id=mail.id) }}" class="article-title">{{ mail.title}}</a></h3>
+            <br>
+            <p class="article-content">{{ mail.subject }}</p>
+            <hr>
+            <p class="article-content">{{ mail.email_text }}</p>
+
+        </div>
+    </article>
+
+    {% endfor %}
+
+</main>
+
+{%endblock body%}

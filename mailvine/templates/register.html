@@ -9,115 +9,93 @@
 
 {% block body %}
 
-<main class="form-signin pt-5">
+<div class="container">
+    <main class="container form-signin pt-5">
 
-<form action="" method="POST">
-        {{ form.hidden_tag() }}
-        <!-- generates a hidden field that includes a token that is used to protect the form against CSRF attacks-->
-        <fieldset class="form-group">
-            <legend class="border-bottom mb-4" style="text-align: center;">Create your MailVine Account</legend>
-            <div class="form-group">
-                {{ form.firstName.label(class="form-control-label") }}
-                {% if form.firstName.errors %}
+        <form action="" method="POST">
+            {{ form.hidden_tag() }}
+            <!-- generates a hidden field that includes a token that is used to protect the form against CSRF attacks-->
+            <fieldset class="form-group">
+                <legend class="border-bottom mb-4" style="text-align: center;">Create your MailVine Account</legend>
+                <div class="form-group">
+                    {{ form.firstName.label(class="form-control-label") }}
+                    {% if form.firstName.errors %}
                     {{ form.firstName(class="form-control form-control-lg is-invalid") }}
                     <div class="invalid-feedback">
                         {% for error in form.firstName.errors %}
-                            <span>{{ error }}</span>
+                        <span>{{ error }}</span>
                         {% endfor %}
                     </div>
-                {% else %}
+                    {% else %}
                     {{ form.firstName(class="form-control form-control-lg") }}
-                {% endif %}
-            </div>
-            <div class="form-group">
-                {{ form.lastName.label(class="form-control-label") }}
-                {% if form.lastName.errors %}
+                    {% endif %}
+                </div>
+                <div class="form-group">
+                    {{ form.lastName.label(class="form-control-label") }}
+                    {% if form.lastName.errors %}
                     {{ form.lastName(class="form-control form-control-lg is-invalid") }}
                     <div class="invalid-feedback">
                         {% for error in form.lastName.errors %}
-                            <span>{{ error }}</span>
+                        <span>{{ error }}</span>
                         {% endfor %}
                     </div>
-                {% else %}
+                    {% else %}
                     {{ form.lastName(class="form-control form-control-lg") }}
-                {% endif %}
-            </div>
-            <div class="form-group">
-                {{ form.email.label(class="form-control-label") }}
-                {% if form.email.errors %}
+                    {% endif %}
+                </div>
+                <div class="form-group">
+                    {{ form.email.label(class="form-control-label") }}
+                    {% if form.email.errors %}
                     {{ form.email(class="form-control form-control-lg is-invalid") }}
                     <div class="invalid-feedback">
                         {% for error in form.email.errors %}
-                            <span>{{ error }}</span>
+                        <span>{{ error }}</span>
                         {% endfor %}
                     </div>
-                {% else %}
+                    {% else %}
                     {{ form.email(class="form-control form-control-lg") }}
-                {% endif %}
-            </div>
-            <div class="form-group">
-                {{ form.password.label(class="form-control-label") }}
-                {% if form.password.errors %}
+                    {% endif %}
+                </div>
+                <div class="form-group">
+                    {{ form.password.label(class="form-control-label") }}
+                    {% if form.password.errors %}
                     {{ form.password(class="form-control form-control-lg is-invalid") }}
                     <div class="invalid-feedback">
                         {% for error in form.password.errors %}
-                            <span>{{ error }}</span>
+                        <span>{{ error }}</span>
                         {% endfor %}
                     </div>
-                {% else %}
+                    {% else %}
                     {{ form.password(class="form-control form-control-lg") }}
-                {% endif %}
-            </div>
-            <div class="form-group">
-                {{ form.confirmPassword.label(class="form-control-label") }}
-                {% if form.confirmPassword.errors %}
+                    {% endif %}
+                </div>
+                <div class="form-group">
+                    {{ form.confirmPassword.label(class="form-control-label") }}
+                    {% if form.confirmPassword.errors %}
                     {{ form.confirmPassword(class="form-control form-control-lg is-invalid") }}
                     <div class="invalid-feedback">
                         {% for error in form.confirmPassword.errors %}
-                            <span>{{ error }}</span>
+                        <span>{{ error }}</span>
                         {% endfor %}
                     </div>
-                {% else %}
+                    {% else %}
                     {{ form.confirmPassword(class="form-control form-control-lg") }}
-                {% endif %}
+                    {% endif %}
+                </div>
+            </fieldset>
+            <div class="d-grid gap-2 col-6 mx-auto" style="text-align: center;">
+                {{ form.submit(class="btn btn-outline-primary") }}
             </div>
-        </fieldset>
-        <div class="d-grid gap-2 col-6 mx-auto" style="text-align: center;">
-            {{ form.submit(class="btn btn-outline-primary") }}
+        </form>
+        <br>
+        <div class="border-top pt-3" style="text-align: center;">
+            <small class="text-muted">
+                Already have an account? <a class="ml-2" href="{{ url_for('login') }}">Sign In</a>
+            </small>
         </div>
-    </form>
-    <br>
-    <div class="border-top pt-3" style="text-align: center;">
-        <small class="text-muted">
-            Already have an account? <a class="ml-2" href="{{ url_for('login') }}">Sign In</a>
-        </small>
-    </div>
-    <!--<form method="POST" action="">
-        <img class="mb-4" src="{{ url_for('static', filename='img/MV_logo3.png') }}" alt="" width="72" height="72">
-        <h1 class="h1 mb-3 fw-normal">Sign Up</h1>
-        <h5 class="h4 mb-3 fw-normal">Enter Account Info</h5>
 
-        <input type="text" id="FirstName" name="FirstName" class="form-control" placeholder="First name" aria-label="First name"  required autofocus>
-        <input type="text" id="LastName" name="LastName" class="form-control" placeholder="Last name" aria-label="Last name" required autofocus>
-        <label for="Email" class="visually-hidden">Email address</label>
-        <input type="email" id="Email" name="Email" class="form-control" placeholder="Email address" required autofocus>
-        <div>&nbsp;</div>
-        <label for="Password" class="visually-hidden">Password</label>
-        <input type="password" id="Password" name="Password" class="form-control" placeholder="Password"  required autofocus>
-        <label for="ConfirmPassword" class="visually-hidden">Confirm Password</label>
-        <input type="password" id="ConfirmPassword" class="form-control" placeholder="Confirm Password" required autofocus>
-        <div class="form-check pb-1">
-            <input class="form-check-input" type="checkbox" value="" id="Check" required autofocus>
-            <label class="form-check-label" for="Check">
-                I've read & accepted the <a class="btn btn-link" href="privacy_policy.html" role="button">Privacy
-                Policy</a>
-            </label>
-        </div>
-        <button class="w-100 btn btn-lg btn-outline-primary" type="submit">Sign Up</button>
-
-    </form>-->
-
-</main>
+    </main>
+</div>
 
 
 {% endblock body %}

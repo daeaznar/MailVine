@@ -49,10 +49,22 @@ class UpdateAccountForm(FlaskForm):
                 raise ValidationError('An account is already registered with that email')
 
 
-
 class MailForm(FlaskForm):
     title = StringField('Title', validators=[DataRequired()])
     subject = StringField('Subject', validators=[DataRequired()])
     email_text = TextAreaField('Content', validators=[DataRequired()])
     picture = FileField('Attach Image', validators=[FileAllowed(['jpg', 'png'])])
     submit = SubmitField('Save')
+
+
+class ListForm(FlaskForm):
+    name = StringField('Title', validators=[DataRequired()])
+    description = StringField('Subject', validators=[DataRequired()])
+    submit = SubmitField('Save')
+
+
+class SendMailForm(FlaskForm):
+    email = StringField('Recipient Email', validators=[DataRequired(), Email()])
+    subject = StringField('Subject', validators=[DataRequired()])
+    content = TextAreaField('Content', validators=[DataRequired()])
+    submit = SubmitField('Send')
