@@ -1,7 +1,7 @@
 from flask import Flask
 from flask_sqlalchemy import SQLAlchemy
 from flask_bcrypt import Bcrypt     #hash passwords
-from flask_login import LoginManager    #manage loggins, makes sessions
+from flask_login import LoginManager    #manage log in, makes sessions
 
 # from flask_mysqldb import MySQL
 

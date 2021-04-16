@@ -274,8 +274,8 @@ def send_mail():
 
         server = smtplib.SMTP("smtp.gmail.com", 587)
         server.starttls()
-        server.login("email@gmail.com", "password here")
-        server.sendmail("dae.aznar@gmail.com", email, content)
+        server.login("email@gmail.com", "password")
+        server.sendmail("email@gmail.com", email, content)
 
         flash('Email has been sent', 'success')
         return redirect(url_for('dashboard'))
